@@ -1,8 +1,11 @@
 var NonTouchingLoops = [];
-var jsonOutput = [];
+var jsonOutput = {};
+var ids;
+
 solve('0', '8');
 
 function solve(inNode, outNode) {
+	ids = edges.getIds();
     var forward_paths = getForwardPaths(inNode, outNode);
     //cycles
     cycles = getCycles(edges);
@@ -23,7 +26,6 @@ function solve(inNode, outNode) {
     jsonOutput.delta = overallDelta;
     jsonOutput.transferFunc = sol;
     jsonOutput.nonTouchingLoops = NonTouchingLoops;
-    console.log(jsonOutput);
     return jsonOutput;
 }
 
@@ -31,9 +33,10 @@ function solve(inNode, outNode) {
 function getForwardPaths(startNode, endNode) {
     var stack = new Array();
     var forward_paths = [];
-    for (var i = 0; i < edges.length; i++) {
-        if (edges[i].from == startNode) {
-            var list = [edges[i]];
+    if(edges.length == 0) return forward_paths;
+    for (var i = 0; i < edges.getIds().length; i++) {
+        if (edges.get(ids[i]).from == startNode) {
+            var list = [edges.get(ids[i])];
             stack.push(list);
         }
     }
@@ -46,18 +49,18 @@ function getForwardPaths(startNode, endNode) {
             forward_paths.push(l);
         } else {
             for (var i = 0; i < edges.length; i++) {
-                if (edges[i].from == node) {
+                if (edges.get(ids[i]).from == node) {
                     if (counter == 0) {
-                        if (check_forward_path(l, edges[i])) {
+                        if (check_forward_path(l, edges.get(ids[i]))) {
                             counter++;
-                            l.push(edges[i]);
+                            l.push(edges.get(ids[i]));
                             stack.push(l);
 
                         }
                     } else {
                         var newl = l.slice(0, l.length - 1);
-                        if (check_forward_path(newl, edges[i])) {
-                            newl.push(edges[i]);
+                        if (check_forward_path(newl, edges.get(ids[i]))) {
+                            newl.push(edges.get(ids[i]));
                             stack.push(newl);
 
                         }
@@ -191,10 +194,11 @@ function convertEdgesToNodes(edgeslist) {
 function getCycles(edges) {
     var stack = new Array();
     var loops = [];
-    startNode = edges[0].from;
+    if(edges.length == 0) return loops;
+    startNode = edges.get(ids[0]).from;
     for (var i = 0; i < edges.length; i++) {
-        if (edges[i].from == startNode) {
-            var list = [edges[i]];
+        if (edges.get(ids[i]).from == startNode) {
+            var list = [edges.get(ids[i])];
             stack.push(list);
         }
     }
@@ -211,29 +215,29 @@ function getCycles(edges) {
             }
         } else {
             for (var i = 0; i < edges.length; i++) {
-                if (edges[i].from == node) {
+                if (edges.get(ids[i]).from == node) {
                     if (counter == 0) {
                         counter++;
-                        if (check_loop(loop, edges[i])) {
-                            remove_redundant_edges(loop, edges[i]);
-                            loop.push(edges[i]);
+                        if (check_loop(loop, edges.get(ids[i]))) {
+                            remove_redundant_edges(loop, edges.get(ids[i]));
+                            loop.push(edges.get(ids[i]));
                             if (!contains(loops, loop)) {
                                 loops.push(loop);
                             }
                         } else {
-                            loop.push(edges[i]);
+                            loop.push(edges.get(ids[i]));
                             stack.push(loop);
                         }
                     } else {
                         var newloop = loop.slice(0, loop.length - 1);
-                        if (check_loop(newloop, edges[i])) {
-                            remove_redundant_edges(newloop, edges[i]);
-                            newloop.push(edges[i]);
+                        if (check_loop(newloop, edges.get(ids[i]))) {
+                            remove_redundant_edges(newloop, edges.get(ids[i]));
+                            newloop.push(edges.get(ids[i]));
                             if (!contains(loops, newloop)) {
                                 loops.push(newloop);
                             }
                         } else {
-                            newloop.push(edges[i]);
+                            newloop.push(edges.get(ids[i]));
                             stack.push(newloop);
                         }
                     }
@@ -324,4 +328,11 @@ function remove_redundant_edges(loop, edge) {
             break;
         }
     }
+}
+function solveBtn(){
+	inputNode = document.getElementById("inNode").value;
+	outputNode = document.getElementById("outNode").value;
+	output = solve(inputNode, outputNode);
+	console.log(output);
+	//console.log(edges.getIds());
 }
