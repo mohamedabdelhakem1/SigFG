@@ -1,6 +1,6 @@
 var NonTouchingLoops = [];
 var jsonOutput = [];
-solve('0', '8');
+//solve('0', '8');
 
 function solve(inNode, outNode) {
     var forward_paths = getForwardPaths(inNode, outNode);
@@ -21,7 +21,8 @@ function solve(inNode, outNode) {
     jsonOutput.loops = cycles;
     jsonOutput.delta = delta;
     jsonOutput.transferFunc = sol;
-    console.log(jsonOutput);
+   // console.log(jsonOutput);
+    return jsonOutput;
 }
 
 
