@@ -21,10 +21,12 @@ var edges = [
     { from: '5', to: '6', gain: 1 },
     { from: '6', to: '7', gain: 1 },
     { from: '7', to: '8', gain: 1 },
-    { from: '2', to: '7', gain: 1 },
-    { from: '7', to: '4', gain: -1 },
-    { from: '7', to: '1', gain: -1 },
-    { from: '5', to: '2', gain: -1 }
+    { from: '3', to: '6', gain: 1 },
+    { from: '5', to: '7', gain: 1 },
+    { from: '5', to: '4', gain: -1 },
+    { from: '7', to: '5', gain: -1 },
+    { from: '6', to: '2', gain: -1 },
+    { from: '7', to: '1', gain: -1 }
 ];
 
 var selectedNode = null;

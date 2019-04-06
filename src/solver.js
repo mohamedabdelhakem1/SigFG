@@ -8,19 +8,19 @@ function solve(inNode, outNode) {
     cycles = getCycles(edges);
     //non touching loops
     getNonTouchingLoops(cycles, 0, []);
-    console.log(NonTouchingLoops);
     //appending deltas 
-    var delta = 0;
+    var sum = 0;
     for (var i = 0; i < forward_paths.length; i++) {
         var d = getDeltaForForwardPath(forward_paths[i]);
-        delta += d;
         forward_paths[i].delta = d;
+        sum += d*forward_paths[i].gain;
+        
     }
-
-    var sol = delta / getDetla();
+    var overallDelta = getDetla()
+    var sol = sum /overallDelta ;
     jsonOutput.forward_paths = forward_paths;
     jsonOutput.loops = cycles;
-    jsonOutput.delta = delta;
+    jsonOutput.delta = overallDelta;
     jsonOutput.transferFunc = sol;
     jsonOutput.nonTouchingLoops = NonTouchingLoops;
     console.log(jsonOutput);
