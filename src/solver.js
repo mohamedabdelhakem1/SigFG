@@ -334,5 +334,25 @@ function solveBtn(){
 	outputNode = document.getElementById("outNode").value;
 	output = solve(inputNode, outputNode);
 	console.log(output);
-	//console.log(edges.getIds());
+	var text = "1. forward paths: <br>";
+	for(var j = 0; j < output.forward_paths.length; j++){
+		var fb = output.forward_paths[j];
+		text += "&nbsp;&nbsp;" + (j+1) + ") " + fb.nodes[0];
+		for(var k = 1; k < fb.nodes.length; k++){
+			text += "-" + fb.nodes[k];
+		}
+		text += "&nbsp;&nbsp; Gain: " + fb.gain + "&nbsp;&nbsp; detla: " + fb.delta +"<br>";
+	}
+	text += "<br><br>2. loops: <br>";
+	for(var j = 0; j < output.loops.length; j++){
+		var lp = output.loops[j];
+		text += "&nbsp;&nbsp;" + (j+1) + ") " + lp.nodes[0];
+		for(var k = 1; k < lp.nodes.length; k++){
+			text += "-" + lp.nodes[k];
+		}
+		text += "&nbsp;&nbsp; Gain: " + lp.gain +"<br>";
+	}
+	//find two non touching
+	
+	document.getElementById("sol").innerHTML = text;
 }

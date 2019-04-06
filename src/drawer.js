@@ -63,7 +63,7 @@ network.on("click", function (params) {
   				from: selectedNode,
   				to: destinationNode, 
   				label: addEdgeOnClickWeight, 
-  				weight: parseInt(addEdgeOnClickWeight),
+  				gain: parseInt(addEdgeOnClickWeight),
   				arrows:'to',
   			});
   			selectedNode = null;
