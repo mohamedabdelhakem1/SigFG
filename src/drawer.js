@@ -1,8 +1,31 @@
 var addNodeOnClickLabel = null;
 var addEdgeOnClickWeight = null;
 
-var nodes = new vis.DataSet([]);
-var edges = new vis.DataSet([]);
+var nodes = [
+    { id: '0' },
+    { id: '1' },
+    { id: '2' },
+    { id: '3' },
+    { id: '4' },
+    { id: '5' },
+    { id: '6' },
+    { id: '7' },
+    { id: '8' }
+];
+var edges = [
+    { from: '0', to: '1', gain: 1 },
+    { from: '1', to: '2', gain: 1 },
+    { from: '2', to: '3', gain: 1 },
+    { from: '3', to: '4', gain: 1 },
+    { from: '4', to: '5', gain: 1 },
+    { from: '5', to: '6', gain: 1 },
+    { from: '6', to: '7', gain: 1 },
+    { from: '7', to: '8', gain: 1 },
+    { from: '2', to: '7', gain: 1 },
+    { from: '7', to: '4', gain: -1 },
+    { from: '7', to: '1', gain: -1 },
+    { from: '5', to: '2', gain: -1 }
+];
 
 var selectedNode = null;
 var deleteEdge = false;
@@ -110,6 +133,7 @@ network.on("selectEdge", function (params) {
 // });
 
 function addNodeBtn() {
+<<<<<<< HEAD
 	addNodeOnClickLabel = prompt("Node Name: ");
 }
 
@@ -129,4 +153,11 @@ function solveBtn(){
 	inputNode = document.getElementById("inNode").value;
 	outputNode = document.getElementById("outNode").value;
 	solve(inputNode, outputNode);
+=======
+    addNodeOnClick = true;
+}
+
+function addEdgeBtn() {
+    addEdgeSelected = true;
+>>>>>>> f9f35cd86a665998dca658a477fc773cf656e2ea
 }
