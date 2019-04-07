@@ -1,6 +1,5 @@
 var addNodeOnClickLabel = null;
 var addEdgeOnClickWeight = null;
-var edgesCount = 0;
 
 var nodes = new vis.DataSet([]);
 var edges = new vis.DataSet([]);
@@ -91,7 +90,7 @@ network.on("selectNode", function (params) {
 network.on("selectEdge", function (params) {
     if(deleteEdge){
     	network.deleteSelected();
-    	edgesCount--;
+    	deleteEdge = false;
     }
 });
 

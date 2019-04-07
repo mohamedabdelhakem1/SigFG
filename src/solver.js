@@ -367,9 +367,9 @@ function solveBtn() {
     text += "<br><br>";
     text += "3. delta = 1 ";
     if(output.loops.length > 0){
-    	text += "- (L1 +"
+    	text += "- (L1 "
     	for(var j = 1; j < output.loops.length; j++){
-    		text += "L" + (j+1) + " + "; 
+    		text += "+ L" + (j+1); 
     	}	
     	text += ") ";
     }
@@ -400,4 +400,8 @@ function solveBtn() {
     text += "<br><br>4. total gain = " + output.transferFunc;
 
     document.getElementById("sol").innerHTML = text;
+    NonTouchingLoops = [];
+	NonTouchingLoopsIndices = [];
+	jsonOutput = {};
+	ids = [];
 }
