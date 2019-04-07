@@ -364,6 +364,40 @@ function solveBtn() {
         text += "&nbsp;&nbsp; Gain: " + lp.gain + "<br>";
     }
     //find two non touching
+    text += "<br><br>";
+    text += "3. delta = 1 ";
+    if(output.loops.length > 0){
+    	text += "- (L1 +"
+    	for(var j = 1; j < output.loops.length; j++){
+    		text += "L" + (j+1) + " + "; 
+    	}	
+    	text += ") ";
+    }
+    
+    var nt = 2;
+    var nonTouchingLoopsLength = output.nonTouchingLoops.length;
+    while(nonTouchingLoopsLength > 0){
+    	var term = "";
+    	for(var j = 0; j < output.nonTouchingLoops.length; j++){
+    		var item = output.nonTouchingLoops[j]; 
+    		if(item.length == nt){
+    			if(term.length != 0) term += " + ";
+    			for(var k = 0; k < item.length; k++){
+    				term += "L" + item[k];
+    			}
+    			nonTouchingLoopsLength--;
+    		}
+    	}
+    	if(term.length == 0) continue;
+    	if(nt % 2 == 1){
+    		text += "- (" + term + ") ";
+    	} else {
+    		text += "+ (" + term + ") ";
+    	}
+    	nt++;
+    }
+    text += " = " + output.delta;
+    text += "<br><br>4. total gain = " + output.transferFunc;
 
     document.getElementById("sol").innerHTML = text;
 }
