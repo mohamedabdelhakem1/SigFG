@@ -1,11 +1,10 @@
 var NonTouchingLoops = [];
+var NonTouchingLoopsIndices = [];
 var jsonOutput = {};
 var ids;
 
-solve('0', '8');
-
 function solve(inNode, outNode) {
-	ids = edges.getIds();
+    ids = edges.getIds();
     var forward_paths = getForwardPaths(inNode, outNode);
     //cycles
     cycles = getCycles(edges);
@@ -16,16 +15,16 @@ function solve(inNode, outNode) {
     for (var i = 0; i < forward_paths.length; i++) {
         var d = getDeltaForForwardPath(forward_paths[i]);
         forward_paths[i].delta = d;
-        sum += d*forward_paths[i].gain;
-        
+        sum += d * forward_paths[i].gain;
+
     }
     var overallDelta = getDetla()
-    var sol = sum /overallDelta ;
+    var sol = sum / overallDelta;
     jsonOutput.forward_paths = forward_paths;
     jsonOutput.loops = cycles;
     jsonOutput.delta = overallDelta;
     jsonOutput.transferFunc = sol;
-    jsonOutput.nonTouchingLoops = NonTouchingLoops;
+    jsonOutput.nonTouchingLoops = NonTouchingLoopsIndices;
     return jsonOutput;
 }
 
@@ -33,7 +32,7 @@ function solve(inNode, outNode) {
 function getForwardPaths(startNode, endNode) {
     var stack = new Array();
     var forward_paths = [];
-    if(edges.length == 0) return forward_paths;
+    if (edges.length == 0) return forward_paths;
     for (var i = 0; i < edges.getIds().length; i++) {
         if (edges.get(ids[i]).from == startNode) {
             var list = [edges.get(ids[i])];
@@ -55,7 +54,6 @@ function getForwardPaths(startNode, endNode) {
                             counter++;
                             l.push(edges.get(ids[i]));
                             stack.push(l);
-
                         }
                     } else {
                         var newl = l.slice(0, l.length - 1);
@@ -82,13 +80,18 @@ function getNonTouchingLoops(loopsList, start, indexes) {
         if (!indexes.includes(j)) {
             indexes.push(j);
             if (indexes.length > 1) {
-                //  console.log(indexes);
-                var N_loops_list = [];
+                //   console.log(indexes);
+                var N_loops_list = new Array();
                 for (var n = 0; n < indexes.length; n++) {
                     N_loops_list.push(loopsList[indexes[n]]);
                 }
                 if (check_Non_Touching_loops(N_loops_list)) {
                     NonTouchingLoops.push(N_loops_list);
+                    var loop_indexs = indexes.slice(0);
+                    for(var x = 0 ; x < loop_indexs.length ;x++){
+                        loop_indexs[x] = loop_indexs[x]+1;
+                    }
+                    NonTouchingLoopsIndices.push(loop_indexs);
                 }
             }
             getNonTouchingLoops(loopsList, j + 1, indexes);
@@ -194,7 +197,7 @@ function convertEdgesToNodes(edgeslist) {
 function getCycles(edges) {
     var stack = new Array();
     var loops = [];
-    if(edges.length == 0) return loops;
+    if (edges.length == 0) return loops;
     startNode = edges.get(ids[0]).from;
     for (var i = 0; i < edges.length; i++) {
         if (edges.get(ids[i]).from == startNode) {
@@ -229,6 +232,7 @@ function getCycles(edges) {
                             stack.push(loop);
                         }
                     } else {
+
                         var newloop = loop.slice(0, loop.length - 1);
                         if (check_loop(newloop, edges.get(ids[i]))) {
                             remove_redundant_edges(newloop, edges.get(ids[i]));
@@ -252,6 +256,7 @@ function getCycles(edges) {
         //   console.log(loops_and_gains[i]);
     }
     return loops_and_gains;
+
 }
 
 function pathGain(edges) {
@@ -261,20 +266,6 @@ function pathGain(edges) {
     }
     return gain;
 }
-/*
-{
-    forward: [{
-        path: [],
-        gain: 56,
-
-    },
-    {
-        path: [],
-        gain: 77,
-    }],
-
-}
-*/
 
 function contains(loops, loop) {
     for (var i = 0; i < loops.length; i++) {
@@ -288,12 +279,31 @@ function contains(loops, loop) {
 }
 
 function equalLoop(loop1, loop2) {
+    var counter = 0;
     for (var i = 0; i < loop1.length; i++) {
-        if (!loop2.includes(loop1[i])) {
-            return false;
+        if (loop1[i].id === loop2[0].id) {
+            var index = i + 1;
+            counter++;
+            for (var j = 1; j < loop2.length; j++) {
+                if (loop2[j].id === loop1[index % loop1.length].id) {
+                    counter++;
+                    index++;
+                } else {
+                    console.log("false");
+                    return false;
+                }
+            }
+            break;
         }
     }
-    return true;
+    if (counter == loop1.length) {
+        console.log("true");
+        return true;
+    } else {
+        console.log("false");
+        return false;
+    }
+
 }
 
 function check_loop(loop_edges, edge) {
@@ -329,30 +339,31 @@ function remove_redundant_edges(loop, edge) {
         }
     }
 }
-function solveBtn(){
-	inputNode = document.getElementById("inNode").value;
-	outputNode = document.getElementById("outNode").value;
-	output = solve(inputNode, outputNode);
-	console.log(output);
-	var text = "1. forward paths: <br>";
-	for(var j = 0; j < output.forward_paths.length; j++){
-		var fb = output.forward_paths[j];
-		text += "&nbsp;&nbsp;" + (j+1) + ") " + fb.nodes[0];
-		for(var k = 1; k < fb.nodes.length; k++){
-			text += "-" + fb.nodes[k];
-		}
-		text += "&nbsp;&nbsp; Gain: " + fb.gain + "&nbsp;&nbsp; detla: " + fb.delta +"<br>";
-	}
-	text += "<br><br>2. loops: <br>";
-	for(var j = 0; j < output.loops.length; j++){
-		var lp = output.loops[j];
-		text += "&nbsp;&nbsp;" + (j+1) + ") " + lp.nodes[0];
-		for(var k = 1; k < lp.nodes.length; k++){
-			text += "-" + lp.nodes[k];
-		}
-		text += "&nbsp;&nbsp; Gain: " + lp.gain +"<br>";
-	}
-	//find two non touching
-	
-	document.getElementById("sol").innerHTML = text;
+
+function solveBtn() {
+    inputNode = document.getElementById("inNode").value;
+    outputNode = document.getElementById("outNode").value;
+    output = solve(inputNode, outputNode);
+    console.log(output);
+    var text = "1. forward paths: <br>";
+    for (var j = 0; j < output.forward_paths.length; j++) {
+        var fb = output.forward_paths[j];
+        text += "&nbsp;&nbsp;" + (j + 1) + ") " + fb.nodes[0];
+        for (var k = 1; k < fb.nodes.length; k++) {
+            text += "-" + fb.nodes[k];
+        }
+        text += "&nbsp;&nbsp; Gain: " + fb.gain + "&nbsp;&nbsp; detla: " + fb.delta + "<br>";
+    }
+    text += "<br><br>2. loops: <br>";
+    for (var j = 0; j < output.loops.length; j++) {
+        var lp = output.loops[j];
+        text += "&nbsp;&nbsp;" + (j + 1) + ") " + lp.nodes[0];
+        for (var k = 1; k < lp.nodes.length; k++) {
+            text += "-" + lp.nodes[k];
+        }
+        text += "&nbsp;&nbsp; Gain: " + lp.gain + "<br>";
+    }
+    //find two non touching
+
+    document.getElementById("sol").innerHTML = text;
 }
